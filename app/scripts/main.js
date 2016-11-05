@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded",function(e){
     var display=document.querySelector(".input");
     var expression=display.value;
     display.value=operations(expression,event.key);
+    display.scrollLeft=display.scrollWidth;
   };
 
   /**

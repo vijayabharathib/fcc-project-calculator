@@ -6,9 +6,8 @@ This app can be accessed through [https://vijayabharathib.github.io/fcc-project-
 
 **Challenges**  
 *Not part of the project, but I brought it upon myself.*
-- [ ] No jQuery for a change.
-- [ ] Accessibility through keyboard.
-- [ ] A lean new grid system especially for this
+- [x] No jQuery for a change
+- [x] Accessibility through keyboard
 
 [comment]: http://justfor.comments "Back reference to links"
 [fcc]: http://freecodecamp.com/ "free code camp site"

@@ -1,3 +1,14 @@
+.brand {
+  color: #eee;
+  color: rgba(255,255,255,.7);
+  margin: 5px auto;
+  text-align: center;
+}
+.calculator{
+  background: black;
+  background: linear-gradient(#111,#112);
+}
+
 .input {
   margin: .25em;
   width: 9.5em;
@@ -7,7 +18,8 @@
   background: #b1aa8d;
   background: linear-gradient(to bottom right, #a39475, #b1aa8d );
   color: black;
-  color: rgba(0,0,0,.9);
+  color: rgba(0,0,0,.7);
+  text-shadow: -3px -1px rgba(0,0,0,0.4);
   display: inline-block;
   text-align: right;
   box-sizing: border-box;
@@ -21,36 +33,61 @@
 
 button {
   font-size: 2em;
-  width: 2em;
-  height: 2em;
-  margin: .25em;
+  width: 2.15em;
+  height: 2.15em;
+  margin: 5px;
   border: 1px solid #333;
   border-radius: 3px;
   outline: none;
   color: white;
   background: slategray;
+  background: linear-gradient(to bottom,slategray,#506070);
   transition: background 100ms ease, color 100ms ease;
-
+  text-shadow: -1px 1px rgba(0,0,0,.3),
+    -2px 0 rgba(0,0,0,.4);
   &:active {
-    color: slategray;
-    background: #aaa;
+    background: #506070;
+    background: linear-gradient(to bottom,#506070,slategray);
     transition: background 50ms ease, color 100ms ease;
   }
+}
 
-  &.ops {
-    background: #57a;
+.ops {
+  background: #57a;
+  background: linear-gradient(#57a,#359);
+  &:active {
+    background: #359;
+    background: linear-gradient(#359,#57a);
   }
+}
 
-  &.plus {
-    height: 4.5em;
-    float: right;
-  }
-  &.equal {
-    width: 7em;
-    background: #7a5;
-  }
+.plus {
+  height: 148px;
+  float: right;
+  margin-right: 7px;
+}
 
-  &.clear {
-    background: #a57;
+.equal {
+  width: 227px;
+  background: #7a5;
+  background: linear-gradient(#7a5,#593);
+  &:active{
+    background: #593;
+    background: linear-gradient(#593,#7a5);
   }
+}
+
+.clear {
+  background: #a57;
+  background: linear-gradient(#a57,#935);
+  &:active{
+    background: #935;
+    background: linear-gradient(#935,#a57);
+  }
+}
+
+footer{
+  text-align: center;
+  color: #cce;
+  margin: 4px;
 }
