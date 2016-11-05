@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded",function(e){
+  var recentlyResulted=false;
   console.log("content ready");
   var buttons=document.querySelectorAll("button");
   var clickHandler=function(event){
@@ -11,10 +12,13 @@ document.addEventListener("DOMContentLoaded",function(e){
     event.preventDefault();
     operations(event.key);
   };
+  //#TODO:1 34enter.4 results in 4 not 34.4 (due to recentlyResulted flag)
   function operations(input){
     console.log("incoming:" + input);
     var display=document.querySelector(".input");
     console.log("existing:" + display.value);
+    if(display.value=="NaN")
+      display.value='';
     switch(input){
       case '0':
       case '1':
@@ -26,7 +30,13 @@ document.addEventListener("DOMContentLoaded",function(e){
       case '7':
       case '8':
       case '9':
-        display.value=display.value+input;
+        console.log("number input, recent result? "+ recentlyResulted);
+        if(recentlyResulted) {
+          display.value=input;
+        } else {
+          display.value=display.value+input;
+        }
+        recentlyResulted=false;
         break;
       case '.':
         var exp=/(\+|\*|\/|-)\d+$/;
@@ -45,16 +55,28 @@ document.addEventListener("DOMContentLoaded",function(e){
             display.value.indexOf('*')!=display.value.length-1 ){
           display.value=display.value+input;
         }
+        recentlyResulted=false;
         break;
       case 'Delete':
         display.value=display.value.substr(0,display.value.length-1);
         break;
       case 'AC':
+      case 'c':
         display.value="";
         break;
       case '=':
       case 'Enter':
-        display.value=resolveExpression(display.value);
+        strExpression=display.value;
+        display.value=resolveExpression(strExpression);
+        /**
+          * 34 Enter . 4 resulted in 4 due to recentlyResulted being true after enter
+          * validating input and output for equality will see if there was any result
+          * if the expression was returned as it was due to lack of operand
+          * recentlyResulted is not true - hence will be left false
+          */
+        if(strExpression!==display.value)
+          recentlyResulted=true;
+          
         console.log('resolved');
         break;
     }
@@ -67,6 +89,8 @@ document.addEventListener("DOMContentLoaded",function(e){
     console.log(arrOperands);
     arrOperands.shift(); //remove leading empty operand;
     arrOperands.pop(); //remove trailing empty operand;
+    if(arrOperands.length==0) //if there are no operands
+      return expression; //do nothing on the input expression
     for(var i=0;i<arrOperands.length;i++){
       var a=parseFloat(arr[i]);
       var b=parseFloat(arr[i+1]);
@@ -87,6 +111,10 @@ document.addEventListener("DOMContentLoaded",function(e){
       arr[i+1]=result;
     }
     console.log("result: "+result);
-    return result;
+    return Number.isInteger(result) ? result: result.toFixed(3);
+  }
+
+  function friendlyFormat(number,max_digit){
+
   }
 });
