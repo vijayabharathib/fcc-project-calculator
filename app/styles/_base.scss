@@ -1,0 +1,10 @@
+
+
+body {
+  .calculator { //fix width for container
+    max-width: 20em;
+    border: 1px #333 solid;
+    border-radius: 5px;
+    margin: 0 auto; //center align horizontally
+  }
+}
