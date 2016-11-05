@@ -1,96 +1,92 @@
-
-var apiStreamURL="https://wind-bow.hyperdev.space/twitch-api/streams/"; //base url
-var apiChannelURL="https://wind-bow.hyperdev.space/twitch-api/channels/"; //base url
-var channels=[
-  "ESL_SC2",
-  "OgamingSC2",
-  "cretetion",
-  "freecodecamp",
-  "storbeck",
-  "habathcx",
-  "RobotCaleb",
-  "noobs2ninjas",
-  "comster404"];
-var results=[];
-/**
-  * wait until the document is ready to take orders
-  */
-$(document).ready(function(){
-
-  /**
-    * for each channel in the global variable channels
-    * render channel status, current stream
-    * logo and link
-    */
-  function renderChannels(){
-    $('.error').append('<ul>')
-    channels.forEach(function(channel,index){
-      searchTwitch(channel);
-    });
-    $('.error').append('</ul>')
+document.addEventListener("DOMContentLoaded",function(e){
+  console.log("content ready");
+  var buttons=document.querySelectorAll("button");
+  var clickHandler=function(event){
+    operations(this.innerText);
+  };
+  for(var i=0;i<buttons.length;i++){
+    buttons[i].onclick=clickHandler;
   }
-  /**
-    * search twitch api for channel details first
-    * call for stream details next
-    * render results on success
-    * log error if channel cannot be found
-    */
-  function searchTwitch(channel){
-    var result="";
-    /**
-      * get channel details
-      * if the result is success, call stream details
-      * render them in order
-      */
-    $.ajax({
-        headers: {
-          "Access-Control-Allow-Origin": "*" //handle cross origin issues
-        },
-        dataType: "jsonp", //again to handle cross origin
-        url: apiChannelURL + channel,
-        success: function(data){
-          if(data.status!="404"){
-            result+="<section><a href='" + data.url + "'>";
-            result+="<img src='" + data.logo + "'></img>";
-            result+= "<span class='display_name'>" + data.display_name + "</span>";
-            result+= "<span class='name'>(" + data.name + ")</span>";
-            getStream();
-          }else{ //if status is 404 log error
-            $('.error').append("<li>" + data.message + "</li>");
-          }
-        },
-        error: function(e){
-          $('.error').append(e.message);
+  document.onkeypress=function(event){
+    event.preventDefault();
+    operations(event.key);
+  };
+  function operations(input){
+    console.log("incoming:" + input);
+    var display=document.querySelector(".input");
+    console.log("existing:" + display.value);
+    switch(input){
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        display.value=display.value+input;
+        break;
+      case '.':
+        var exp=/(\+|\*|\/|-)\d+$/;
+        console.log(exp.test(display.value));
+        if(display.value.indexOf('.')==-1 || exp.test(display.value)){
+          display.value=display.value+input;
         }
-    });
-    /**
-      * get stream details if channel is available
-      */
-    function getStream(){
-      $.ajax({
-          headers: {
-            "Access-Control-Allow-Origin": "*" //handle cross origin issues
-          },
-          dataType: "jsonp", //to handle cross origin issues
-          url: apiStreamURL + channel,
-          success: function(data){
-            result+= "<div class='status";
-            if(data.stream == null){
-              result+=" offline'>";
-              result+="<i class='presence fa fw fa-clock-o'></i>"
-              result+= "<span class='stream'>Offline</span>";
-            } else {
-              result+=" online'>";
-              result+= "<i class='presence fa fw fa-check-circle-o'></i>"
-              result+= "<span class='stream'>" + data.stream.game+"</span>";//no class
-            }
-            result+= "</div></a></section>";
-            $('.result').append(result); //render result
+        break;
+      case '+':
+      case '/':
+      case '*':
+      case '-':
+        if(display.value.indexOf('+')!=display.value.length-1 &&
+            display.value.indexOf('-')!=display.value.length-1 &&
+            display.value.indexOf('/')!=display.value.length-1 &&
+            display.value.indexOf('*')!=display.value.length-1 ){
+          display.value=display.value+input;
         }
-      });
+        break;
+      case 'Delete':
+        display.value=display.value.substr(0,display.value.length-1);
+        break;
+      case 'AC':
+        display.value="";
+        break;
+      case '=':
+      case 'Enter':
+        display.value=resolveExpression(display.value);
+        console.log('resolved');
+        break;
     }
+  };
+  function resolveExpression(expression){
+    var result=0;
+    var arr=expression.split(/[-\+\*\/]+/);
+    console.log(arr);
+    var arrOperands=expression.split(/[^-\+\*\/]+/);
+    console.log(arrOperands);
+    arrOperands.shift(); //remove leading empty operand;
+    arrOperands.pop(); //remove trailing empty operand;
+    for(var i=0;i<arrOperands.length;i++){
+      var a=parseFloat(arr[i]);
+      var b=parseFloat(arr[i+1]);
+      switch (arrOperands[i]) {
+        case '+':
+          result=a+b;
+          break;
+        case '-':
+          result=a-b;
+          break;
+        case '*':
+          result=a*b;
+          break;
+        case '/':
+          result=a/b;
+          break;
+      }
+      arr[i+1]=result;
+    }
+    console.log("result: "+result);
+    return result;
   }
-
-  // main call that does the job
-  renderChannels();
 });
